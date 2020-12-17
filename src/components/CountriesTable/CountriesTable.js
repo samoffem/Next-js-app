@@ -1,6 +1,7 @@
 import { KeyboardArrowUpRounded, KeyboardArrowDownRounded } from '@material-ui/icons'
 import { useState } from 'react'
 import styles from './CountriesTable.module.css'
+import Link from 'next/link'
 
 const orderBy = (countries, value, direction)=>{
     if(direction == "asc"){
@@ -33,6 +34,7 @@ const SortArrow = ({direction})=>{
 }
 
 const CountriesTable = ({countries}) => {
+    
     const [direction, setDirection] = useState()
     const [value, setValue] = useState()
     const orderedCountries = orderBy(countries, value, direction)
@@ -55,25 +57,51 @@ const CountriesTable = ({countries}) => {
     return (
         <div>
             <div className={styles.heading}>
+                <div className={styles.heading_flag}></div>
                 <button onClick={()=>setValueAndDirection('name')} className={styles.heading_name}>
                     <div>Name</div>
-                    <SortArrow />
+                    {value ==="name" && <SortArrow direction={direction} />}
                     
                 </button>
 
                 <button onClick={()=>setValueAndDirection('population')} className={styles.heading_population}>
                     <div>Population</div>
-                    <SortArrow direction={direction} />
+                    {value ==="population" && <SortArrow direction={direction} />}
+                </button>
+
+                <button 
+                onClick={()=>setValueAndDirection('area')} 
+                className={styles.heading_area}>
+                    <div>Area (km<sup style={{fontSize: "0.5rem"}}>2</sup>)</div>
+                    {value ==="area" && <SortArrow direction={direction} />}
+                </button>
+
+                <button 
+                onClick={()=>setValueAndDirection('gini')} 
+                className={styles.heading_gini}>
+                    <div>Gini </div>
+                    {value ==="gini" && <SortArrow direction={direction} />}
                 </button>
             </div>
 
             {orderedCountries.map((country)=>(
-                <div className={styles.row} key={country.numericCode}>
-                    
-                    <div className={styles.name}>{country.name}</div>
+                <Link href={`/country/${country.alpha3Code}`} key={country.numericCode}>
+                     <div className={styles.row}>
 
-                    <div className={styles.population}>{country.population}</div>
-                </div>
+                        <div className={styles.flag}>
+                            <img src={country.flag} alt={country.name} />
+                        </div>
+
+                        <div className={styles.name}>{country.name}</div>
+
+                        <div className={styles.population}>{country.population}</div>
+
+                        <div className={styles.area}>{country.area || 0}</div>
+
+                        <div className={styles.gini}>{country.gini || 0}</div>
+                    </div>
+                </Link>
+               
             ))}
         </div>
     )
