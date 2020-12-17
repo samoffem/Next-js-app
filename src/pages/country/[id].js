@@ -119,7 +119,20 @@ const Country = ({country}) => {
 
 export default Country
 
-export const getServerSideProps = async ({params})=>{
+const getStaticPaths = async ()=>{
+    const res = await fetch("https://restcountries.eu/rest/v2/all")
+    const countries = await res.json()
+
+    const path = countries.map((country)=>({
+        params: {id: country.alpha3code}
+    }))
+    return{
+        paths,
+        fallback: false
+    }
+}
+
+export const getStaticProps = async ({params})=>{
     const country = await getCountry(params.id)
     return {
         props:{
