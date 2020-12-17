@@ -123,7 +123,7 @@ export const getStaticPaths = async ()=>{
     const res = await fetch("https://restcountries.eu/rest/v2/all")
     const countries = await res.json()
 
-    const path = countries.map((country)=>({
+    const paths = countries.map((country)=>({
         params: {id: country.alpha3code}
     }))
     return{
